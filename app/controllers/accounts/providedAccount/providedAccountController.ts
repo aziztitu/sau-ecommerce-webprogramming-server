@@ -9,13 +9,14 @@ export const providedAccountController = Router({ mergeParams: true });
 
 providedAccountController.use(validateProvidedAccount);
 
+providedAccountController.get('/authData', getAuthData);
 providedAccountController.get('/info/basic', getBasicInfo);
 providedAccountController.put('/info', allowOnlySelfOrAdmin, updateAccountInfo);
 providedAccountController.put('/password', allowOnlySelfOrAdmin, updatePassword);
 
 /**
  * (Middleware)
- * Validates the provided account from the url. If account is valid, assigns the account id in the route data for future route handlers.
+ * Validates the provided account from the url. If account is valid, assigns the account in the route data for future route handlers.
  */
 function validateProvidedAccount(req: Request, res: Response, next: NextFunction) {
     let accountId = req.params.accountId;
@@ -61,6 +62,26 @@ function allowOnlySelfOrAdmin(req: Request, res: Response, next: NextFunction) {
         success: false,
         message: `You don't have the permission to perform this action`,
     } as ApiResponseData);
+}
+
+/**
+ * Retrieves the data related to authentication for the provided player
+ */
+function getAuthData(req: Request, res: Response, next: NextFunction) {
+    const apiResponseData = {
+        success: true,
+        message: 'Auth data collected successfully',
+        authData: {
+            accountInfo: Lodash.pick(req.routeData.accounts.providedAccount, [
+                'id',
+                'username',
+                'name',
+                'role',
+            ]),
+        },
+    } as ApiResponseData;
+
+    res.json(apiResponseData);
 }
 
 /**
