@@ -9,10 +9,10 @@
   "scripts": {
     "tsc": "tsc",
     "tsc-watch": "tsc --watch",
-    "pm2-start": "pm2 start build/server.js",
+    "pm2": "pm2 start build/server.js",
     "serve": "node build/server.js",
     "serve-watch": "nodemon build/server.js",
-    "build": "npm run tsc && npm run serve",
+    "build": "npm run tsc",
     "watch": "tsc-watch --onSuccess \"npm run serve\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
