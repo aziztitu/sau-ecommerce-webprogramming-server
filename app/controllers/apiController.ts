@@ -16,6 +16,13 @@ export type ApiResponseData = {
 
 export const apiController: Router = Router();
 
+apiController.use(
+    '/.well-known/acme-challenge/:challengeKey',
+    (req: Request, res: Response, next: NextFunction) => {
+        res.send(process.env.ACME_CHALLENGE_RESULT || '');
+    }
+);
+
 apiController.use(initRouteData, extractApiToken);
 
 apiController.use('/auth', authController);
