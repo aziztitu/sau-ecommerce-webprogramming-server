@@ -9,6 +9,7 @@
   "scripts": {
     "tsc": "tsc",
     "tsc-watch": "tsc --watch",
+    "pm2-start": "pm2 start build/server.js",
     "serve": "node build/server.js",
     "serve-watch": "nodemon build/server.js",
     "build": "npm run tsc && npm run serve",
