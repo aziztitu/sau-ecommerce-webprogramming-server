@@ -47,6 +47,9 @@ export class Account extends Typegoose {
     @prop({ required: true })
     name!: string;
 
+    @prop({ required: true, unique: true })
+    email!: string;
+
     @prop({ required: true, enum: AccountRole, default: AccountRole.User })
     role!: AccountRole;
 
@@ -63,6 +66,7 @@ export class Account extends Typegoose {
                     password: serverConfig.mongo.defaultAdminPassword,
                     name: 'Admin',
                     role: AccountRole.Admin,
+                    email: 'admin@azeesoft.com',
                 } as Account);
 
                 try {
@@ -90,8 +94,6 @@ export class Account extends Typegoose {
         return new Promise<OutputData>((resolve, reject) => {
             let resData: OutputData;
 
-            const newAccountModel = new AccountModel(accountDoc);
-
             for (const reservedUsernameId in ReservedUsername) {
                 if (accountDoc.username === ReservedUsername[reservedUsernameId]) {
                     resData = {
@@ -106,6 +108,7 @@ export class Account extends Typegoose {
                 }
             }
 
+            const newAccountModel = new AccountModel(accountDoc);
             newAccountModel.save((err) => {
                 if (err) {
                     resData = {

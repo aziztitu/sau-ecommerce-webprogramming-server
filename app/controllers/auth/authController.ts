@@ -10,7 +10,7 @@ import { apiMiddlewares } from '../../middlewares/apiMiddlewares';
 export const authController = Router();
 
 authController.post('/login', login);
-authController.post('/signup', apiMiddlewares.disallowFeature, signup);
+authController.post('/signup', signup);
 authController.post('/validateAPIToken', validateApiToken);
 authController.post('/logoutSession', logoutSession);
 
@@ -113,12 +113,13 @@ function login(req: Request, res: Response) {
  * Creates new account
  */
 async function signup(req: Request, res: Response) {
-    const { username, password, name } = req.body;
+    const { username, password, name, email } = req.body;
 
     const resData: ApiResponseData = await AccountModel.addNewAccount({
-        username: username,
-        password: password,
-        name: name,
+        username,
+        password,
+        name,
+        email,
     } as Account);
 
     res.json(resData);
