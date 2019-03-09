@@ -9,7 +9,7 @@
   "scripts": {
     "tsc": "tsc",
     "tsc-watch": "tsc --watch",
-    "pm2": "pm2 start build/server.js",
+    "pm2": "pm2 start build/server.js --name sau-ecommerce",
     "serve": "node build/server.js",
     "serve-watch": "nodemon build/server.js",
     "build": "npm run tsc",
