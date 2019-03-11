@@ -1,4 +1,7 @@
 import colors from 'colors/safe';
+import axios from 'axios';
+import qs from 'qs';
+import serverConfig from '../serverConfig';
 
 export enum StringDecoration {
     HIGHLIGHT = 'yellow',
@@ -38,8 +41,8 @@ export const helperUtils = {
         let decoratedMessage = message;
 
         let color: any;
-        decorations.forEach(decor => {
-            decor.split(' ').forEach(style => {
+        decorations.forEach((decor) => {
+            decor.split(' ').forEach((style) => {
                 if (!color) {
                     color = (colors as any)[style];
                 } else {
@@ -63,5 +66,23 @@ export const helperUtils = {
         }
 
         return false;
-    }
+    },
+
+    async validateRecaptcha(recaptchaResponse: string) {
+        let res = await axios.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            qs.stringify({
+                secret: serverConfig.recaptcha.secretKey,
+                response: recaptchaResponse,
+            })
+        );
+
+        if (res.data.success === true) {
+            return true;
+        }
+
+        helperUtils.log(this.getPrettyJSON(res.data));
+
+        return false;
+    },
 };

@@ -16,12 +16,13 @@
     "watch": "tsc-watch --onSuccess \"npm run serve\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "Azee",
   "license": "MIT",
   "dependencies": {
     "@types/mongoose": "^5.3.7",
+    "@types/qs": "^6.5.2",
+    "axios": "^0.18.0",
     "bcrypt": "3.0.2",
     "body-parser": "^1.18.3",
     "colors": "^1.3.3",
@@ -36,6 +37,7 @@
     "mongoose": "^5.4.3",
     "morgan": "^1.9.1",
     "on-finished": "^2.3.0",
+    "qs": "^6.6.0",
     "reflect-metadata": "^0.1.12",
     "typegoose": "^5.4.1",
     "wait-for-stuff": "^1.4.0"

@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import serverConfig from '@/tools/serverConfig';
 import { ApiTokenPayload } from '../../tools/types/auth/index';
 import { apiMiddlewares } from '../../middlewares/apiMiddlewares';
+import { helperUtils } from '../../tools/utils/helperUtils';
 
 export const authController = Router();
 
@@ -113,7 +114,23 @@ function login(req: Request, res: Response) {
  * Creates new account
  */
 async function signup(req: Request, res: Response) {
-    const { username, password, name, email } = req.body;
+    const { username, password, name, email, recaptchaResponse } = req.body;
+
+    if (recaptchaResponse) {
+        if (!(await helperUtils.validateRecaptcha(recaptchaResponse))) {
+            res.json({
+                success: false,
+                message: 'Invalid Recaptcha data. Try Again',
+            } as ApiResponseData);
+            return;
+        }
+    } else {
+        res.json({
+            success: false,
+            message: 'No Recaptcha data provided',
+        } as ApiResponseData);
+        return;
+    }
 
     const resData: ApiResponseData = await AccountModel.addNewAccount({
         username,

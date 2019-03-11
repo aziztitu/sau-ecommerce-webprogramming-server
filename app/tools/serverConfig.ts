@@ -53,6 +53,10 @@ const serverConfig = {
             } as jwt.SignOptions,
         },
     },
+
+    recaptcha: {
+        secretKey: process.env.RECAPTCHA_SECRET_KEY,
+    },
 };
 
 export default serverConfig;
