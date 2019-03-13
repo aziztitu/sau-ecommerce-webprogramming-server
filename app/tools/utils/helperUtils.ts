@@ -2,6 +2,9 @@ import colors from 'colors/safe';
 import axios from 'axios';
 import qs from 'qs';
 import serverConfig from '../serverConfig';
+import { ApiResponseData } from '@/controllers/apiController';
+
+export type ReturnResult = ApiResponseData;
 
 export enum StringDecoration {
     HIGHLIGHT = 'yellow',

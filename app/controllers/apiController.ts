@@ -7,6 +7,7 @@ import { ApiTokenPayload } from '../tools/types/auth/index';
 import authMiddlewares from '@/middlewares/authMiddlewares';
 import { devUtils } from '@/tools/utils/devUtils';
 import { helperUtils, StringDecoration } from '@/tools/utils/helperUtils';
+import { vendorsController } from './vendors/vendorsController';
 
 export type ApiResponseData = {
     success: boolean;
@@ -27,6 +28,7 @@ apiController.use(initRouteData, extractApiToken);
 
 apiController.use('/auth', authController);
 apiController.use('/accounts', accountsController);
+apiController.use('/vendors', vendorsController);
 
 /**
  * (Middleware)

@@ -2,7 +2,7 @@ import { Typegoose, prop, staticMethod, ModelType, pre, InstanceType } from 'typ
 import bcrypt from 'bcrypt';
 import { MongooseDocument } from 'mongoose';
 import serverConfig from '@/tools/serverConfig';
-import { ApiResponseData as OutputData } from '@/controllers/apiController';
+import { ReturnResult } from '@/tools/utils/helperUtils';
 
 export enum AccountRole {
     Admin = 'admin',
@@ -91,8 +91,8 @@ export class Account extends Typegoose {
 
     @staticMethod
     static addNewAccount(this: ModelType<Account> & Account, accountDoc: Account) {
-        return new Promise<OutputData>((resolve, reject) => {
-            let resData: OutputData;
+        return new Promise<ReturnResult>((resolve, reject) => {
+            let resData: ReturnResult;
 
             for (const reservedUsernameId in ReservedUsername) {
                 if (accountDoc.username === ReservedUsername[reservedUsernameId]) {
