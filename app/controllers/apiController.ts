@@ -9,6 +9,7 @@ import { devUtils } from '@/tools/utils/devUtils';
 import { helperUtils, StringDecoration } from '@/tools/utils/helperUtils';
 import { vendorsController } from './vendors/vendorsController';
 import { productsController } from './products/productsController';
+import { apiMiddlewares } from '@/middlewares/apiMiddlewares';
 
 export type ApiResponseData = {
     success: boolean;
@@ -25,6 +26,7 @@ apiController.use(
     }
 );
 
+apiController.use(apiMiddlewares.multipartPreprocessor);
 apiController.use(initRouteData, extractApiToken);
 
 apiController.use('/auth', authController);
