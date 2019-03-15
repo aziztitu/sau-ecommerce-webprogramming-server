@@ -1,4 +1,7 @@
 import jwt from 'jsonwebtoken';
+import fs, { PathLike } from 'fs';
+import { helperUtils } from './utils/helperUtils';
+
 export enum ServerMode {
     dev = 'dev',
     prod = 'prod',
@@ -56,6 +59,20 @@ const serverConfig = {
 
     recaptcha: {
         secretKey: process.env.RECAPTCHA_SECRET_KEY,
+    },
+
+    paths: {
+        root: helperUtils.getPathSafe(`${__dirname}/../..`, true),
+
+        get static() {
+            let staticPath = `${this.root}/static`;
+            return helperUtils.getPathSafe(staticPath, true);
+        },
+
+        get images() {
+            let path = `${this.static}/images/`;
+            return helperUtils.getPathSafe(path, true);
+        },
     },
 };
 

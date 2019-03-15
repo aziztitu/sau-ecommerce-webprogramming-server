@@ -31,3 +31,5 @@ build/
 .vscode/
 
 .env
+
+static/images/products/

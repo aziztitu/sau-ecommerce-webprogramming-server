@@ -7,7 +7,28 @@ export const productsController = Router();
 
 productsController.use(authMiddlewares.allowOnlyWithToken);
 
+productsController.get('/all', getAllProducts);
 productsController.put('/new', authMiddlewares.allowOnlyAdmin, addNewProduct);
+
+async function getAllProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+        let products = await ProductModel.find()
+            .sort({ _id: 1 })
+            .exec();
+
+        res.json({
+            success: true,
+            message: 'Products fetched',
+            products,
+        } as ApiResponseData);
+    } catch (err) {
+        res.json({
+            success: false,
+            message: 'Error fetching products',
+            errorReport: err,
+        } as ApiResponseData);
+    }
+}
 
 async function addNewProduct(req: Request, res: Response, next: NextFunction) {
     console.log(req.body);

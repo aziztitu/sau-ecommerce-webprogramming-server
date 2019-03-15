@@ -1,6 +1,8 @@
+import fs from 'fs';
 import { Typegoose, prop, Ref, index, staticMethod, ModelType } from 'typegoose';
 import { Vendor } from './Vendor';
-import { ReturnResult } from '@/tools/utils/helperUtils';
+import { ReturnResult, helperUtils } from '@/tools/utils/helperUtils';
+import serverConfig from '@/tools/serverConfig';
 
 export class Product extends Typegoose {
     @prop({ required: true })
@@ -46,7 +48,15 @@ export class Product extends Typegoose {
                     };
 
                     if (imageFileBuffer) {
-                        // TODO: Write image buffer to file
+                        let imageFilePath = helperUtils.getPathSafe(
+                            `${serverConfig.paths.images}/products/${newProductModel._id}`,
+                            false
+                        );
+                        console.log(imageFilePath);
+
+                        let stream = fs.createWriteStream(imageFilePath);
+                        stream.write(imageFileBuffer);
+                        stream.end();
                     }
                 }
 

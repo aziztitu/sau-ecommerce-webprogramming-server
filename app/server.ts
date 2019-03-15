@@ -96,6 +96,7 @@ class Server {
             })
         );
 
+        this.app.use('/static', express.static('static'));
         this.app.use('/', apiController);
 
         this.app.listen(serverConfig.http.port, () => {
@@ -113,12 +114,9 @@ class Server {
     private async initDatabaseConnection() {
         helperUtils.log('Initializing connection to database...\n');
         try {
-            await mongoose.connect(
-                serverConfig.mongo.uri,
-                {
-                    useNewUrlParser: true,
-                }
-            );
+            await mongoose.connect(serverConfig.mongo.uri, {
+                useNewUrlParser: true,
+            });
 
             this.db = mongoose.connection;
             helperUtils.log('Connected to the database successfully!\n', StringDecoration.SUCCESS);

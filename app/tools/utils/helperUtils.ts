@@ -3,6 +3,8 @@ import axios from 'axios';
 import qs from 'qs';
 import serverConfig from '../serverConfig';
 import { ApiResponseData } from '@/controllers/apiController';
+import { PathLike } from 'fs';
+import fs from 'fs';
 
 export type ReturnResult = ApiResponseData;
 
@@ -87,5 +89,23 @@ export const helperUtils = {
         helperUtils.log(this.getPrettyJSON(res.data));
 
         return false;
+    },
+
+    getPathSafe(path: PathLike, isDir = false) {
+        let dirPath = path;
+        if (!isDir) {
+            dirPath = `${dirPath}/..`;
+        }
+
+        if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath, { recursive: true });
+        }
+
+        let safePath = path;
+        if (fs.existsSync(safePath)) {
+            safePath = fs.realpathSync(path);
+        }
+
+        return safePath;
     },
 };
