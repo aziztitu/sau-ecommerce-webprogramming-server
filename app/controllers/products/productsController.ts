@@ -2,12 +2,14 @@ import { Router, Request, Response, NextFunction } from 'express';
 import authMiddlewares from '@/middlewares/authMiddlewares';
 import { ApiResponseData } from '../apiController';
 import { ProductModel, Product } from '@/models/Product';
+import { selectedProductController } from './selectedProduct/selectedProductController';
 
 export const productsController = Router();
 
-productsController.use(authMiddlewares.allowOnlyWithToken);
-
 productsController.get('/all', getAllProducts);
+productsController.use('/select/:productId', selectedProductController);
+
+productsController.use(authMiddlewares.allowOnlyWithToken);
 productsController.put('/new', authMiddlewares.allowOnlyAdmin, addNewProduct);
 
 async function getAllProducts(req: Request, res: Response, next: NextFunction) {
@@ -59,3 +61,4 @@ async function addNewProduct(req: Request, res: Response, next: NextFunction) {
 
     res.json(resData);
 }
+

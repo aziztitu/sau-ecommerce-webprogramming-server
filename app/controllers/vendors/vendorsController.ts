@@ -5,9 +5,9 @@ import { ApiResponseData } from '../apiController';
 
 export const vendorsController: Router = Router();
 
-vendorsController.use(authMiddlewares.allowOnlyWithToken);
-
 vendorsController.get('/all', getAllVendors);
+
+vendorsController.use(authMiddlewares.allowOnlyWithToken);
 vendorsController.put('/new', authMiddlewares.allowOnlyAdmin, addNewVendor);
 
 async function getAllVendors(req: Request, res: Response, next: NextFunction) {

@@ -11,7 +11,7 @@ export class Product extends Typegoose {
     @prop({ required: true })
     price!: number;
 
-    @prop({ required: true })
+    @prop({ required: true, index: true, unique: true })
     plu!: string;
 
     @prop()

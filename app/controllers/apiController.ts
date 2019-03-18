@@ -43,6 +43,9 @@ function initRouteData(req: Request, res: Response, next: NextFunction) {
         accounts: {
             providedAccount: undefined,
         },
+        products: {
+            selectedProduct: undefined,
+        },
     };
 
     next();
