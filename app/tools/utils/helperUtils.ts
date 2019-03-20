@@ -5,6 +5,8 @@ import serverConfig from '../serverConfig';
 import { ApiResponseData } from '@/controllers/apiController';
 import { PathLike } from 'fs';
 import fs from 'fs';
+import path from 'path';
+import { devUtils } from './devUtils';
 
 export type ReturnResult = ApiResponseData;
 
@@ -91,19 +93,22 @@ export const helperUtils = {
         return false;
     },
 
-    getPathSafe(path: PathLike, isDir = false) {
-        let dirPath = path;
+    getPathSafe(givenPath: string, isDir = false) {
+        let dirPath = givenPath;
         if (!isDir) {
-            dirPath = `${dirPath}/..`;
+            dirPath = path.join(dirPath, '../');
         }
 
+        devUtils.log(`Dir Path: ${dirPath}`);
+
         if (!fs.existsSync(dirPath)) {
+            devUtils.log(`Making Directory: ${dirPath}`);
             fs.mkdirSync(dirPath, { recursive: true });
         }
 
-        let safePath = path;
+        let safePath = givenPath;
         if (fs.existsSync(safePath)) {
-            safePath = fs.realpathSync(path);
+            safePath = fs.realpathSync(givenPath);
         }
 
         return safePath;

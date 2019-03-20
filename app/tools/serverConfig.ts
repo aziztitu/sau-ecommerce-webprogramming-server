@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import fs, { PathLike } from 'fs';
+import path from 'path';
 import { helperUtils } from './utils/helperUtils';
 
 export enum ServerMode {
@@ -62,10 +63,12 @@ const serverConfig = {
     },
 
     paths: {
-        root: helperUtils.getPathSafe(`${__dirname}/../..`, true),
+        get root() {
+            return helperUtils.getPathSafe(path.join(__dirname, `../../`), true);
+        },
 
         get static() {
-            let staticPath = `${this.root}/static`;
+            let staticPath = `${this.root}/static/`;
             return helperUtils.getPathSafe(staticPath, true);
         },
 
