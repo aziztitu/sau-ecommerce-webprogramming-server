@@ -6,15 +6,20 @@ import { ApiResponseData } from '@/controllers/apiController';
 export const selectedProductController = Router({ mergeParams: true });
 
 selectedProductController.use(validateSelectedProduct);
+selectedProductController.get('/details', getProductDetails);
+
 selectedProductController.use(authMiddlewares.allowOnlyWithToken);
 selectedProductController.post('/update', authMiddlewares.allowOnlyAdmin, updateProduct);
 selectedProductController.post('/remove', authMiddlewares.allowOnlyAdmin, removeProduct);
+
+/**
+ * Middlewares
+ */
 
 function validateSelectedProduct(req: Request, res: Response, next: NextFunction) {
     let selectedProductId = req.params.productId;
 
     console.log(`Selected Product ID: ${selectedProductId}`);
-
 
     ProductModel.findById(selectedProductId, (err, product) => {
         if (err || !product) {
@@ -30,6 +35,22 @@ function validateSelectedProduct(req: Request, res: Response, next: NextFunction
         req.routeData.products.selectedProduct = product;
         next();
     });
+}
+
+/**
+ * Controllers
+ */
+
+async function getProductDetails(req: Request, res: Response, next: NextFunction) {
+    let selectedProduct = req.routeData.products.selectedProduct!;
+
+    res.json({
+        success: true,
+        message: 'Product details fetched',
+        productDetails: {
+            product: selectedProduct,
+        },
+    } as ApiResponseData);
 }
 
 async function updateProduct(req: Request, res: Response, next: NextFunction) {
