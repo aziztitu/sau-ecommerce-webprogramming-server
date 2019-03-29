@@ -35,11 +35,7 @@ async function getAllProducts(req: Request, res: Response, next: NextFunction) {
 async function addNewProduct(req: Request, res: Response, next: NextFunction) {
     console.log(req.body);
 
-    let { name, price, plu, vendorId } = req.body;
-    console.log(name);
-    console.log(price);
-    console.log(plu);
-    console.log(vendorId);
+    let productData = req.body;
 
     let files = (req as any).files;
     console.log(files);
@@ -50,12 +46,7 @@ async function addNewProduct(req: Request, res: Response, next: NextFunction) {
     }
 
     let resData = await ProductModel.addNewProduct(
-        {
-            name,
-            price,
-            plu,
-            vendorId,
-        } as Product,
+        productData as Product,
         imageFileBuffer
     );
 
