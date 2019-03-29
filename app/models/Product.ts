@@ -20,6 +20,12 @@ export class Product extends Typegoose {
     @prop({ ref: Vendor, required: true, index: true })
     vendorId!: Ref<Vendor>;
 
+    @prop({ default: '' })
+    description!: string;
+
+    @prop({ default: '' })
+    detailHTML!: string;
+
     @staticMethod
     static addNewProduct(
         this: ModelType<Product> & Product,

@@ -54,12 +54,14 @@ async function getProductDetails(req: Request, res: Response, next: NextFunction
 }
 
 async function updateProduct(req: Request, res: Response, next: NextFunction) {
-    let { name, price, plu, vendorId } = req.body;
+    let { name, price, plu, description, detailHTML, vendorId } = req.body;
 
     let selectedProduct = req.routeData.products.selectedProduct!;
     selectedProduct.name = name;
     selectedProduct.price = price;
     selectedProduct.plu = plu;
+    selectedProduct.description = description;
+    selectedProduct.detailHTML = detailHTML;
     selectedProduct.vendorId = vendorId;
 
     try {
