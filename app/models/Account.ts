@@ -1,8 +1,18 @@
-import { Typegoose, prop, staticMethod, ModelType, pre, InstanceType } from 'typegoose';
+import {
+    Typegoose,
+    prop,
+    staticMethod,
+    ModelType,
+    pre,
+    InstanceType,
+    Ref,
+    arrayProp,
+} from 'typegoose';
 import bcrypt from 'bcrypt';
 import { MongooseDocument } from 'mongoose';
 import serverConfig from '@/tools/serverConfig';
 import { ReturnResult } from '@/tools/utils/helperUtils';
+import { Product } from './Product';
 
 export enum AccountRole {
     Admin = 'admin',
@@ -12,6 +22,11 @@ export enum AccountRole {
 export enum ReservedUsername {
     Empty = '',
     Admin = 'admin',
+}
+
+export class CartData extends Typegoose {
+    @arrayProp({ itemsRef: Product, default: () => [] })
+    products!: Ref<Product>[];
 }
 
 @pre('save', function(next) {
@@ -52,6 +67,9 @@ export class Account extends Typegoose {
 
     @prop({ required: true, enum: AccountRole, default: AccountRole.User })
     role!: AccountRole;
+
+    @prop({ default: () => new CartData() })
+    cart!: CartData;
 
     @staticMethod
     static async addAdminIfMissing(this: ModelType<Account> & Account) {
