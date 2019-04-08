@@ -1,7 +1,7 @@
 import { ApiTokenPayload } from '../auth';
 import { Response } from 'express';
 import { InstanceType } from 'typegoose';
-import { Account } from '../../../models/Account';
+import { Account, CartData } from '../../../models/Account';
 import { Product } from '@/models/Product';
 
 declare global {
@@ -15,11 +15,13 @@ declare global {
                 products: {
                     selectedProduct?: InstanceType<Product>;
                 };
+                cartData: CartData;
             };
         }
 
         interface SessionData {
             apiToken?: string;
+            cartData?: CartData;
         }
     }
 }

@@ -10,6 +10,9 @@ import { helperUtils, StringDecoration } from '@/tools/utils/helperUtils';
 import { vendorsController } from './vendors/vendorsController';
 import { productsController } from './products/productsController';
 import { apiMiddlewares } from '@/middlewares/apiMiddlewares';
+import { cartController } from './cart/cartController';
+import { CartData } from '@/models/Account';
+import { cartMiddlewares } from '@/middlewares/cartMiddlewares';
 
 export type ApiResponseData = {
     success: boolean;
@@ -27,18 +30,20 @@ apiController.use(
 );
 
 apiController.use(apiMiddlewares.multipartPreprocessor);
-apiController.use(initRouteData, extractApiToken);
+apiController.use(initRoute, extractApiToken);
+apiController.use(cartMiddlewares.initCartDataInRoute);
 
 apiController.use('/auth', authController);
 apiController.use('/accounts', accountsController);
 apiController.use('/vendors', vendorsController);
 apiController.use('/products', productsController);
+apiController.use('/cart', cartController);
 
 /**
  * (Middleware)
  * Initializes the route data with the proper structure and dummy values
  */
-function initRouteData(req: Request, res: Response, next: NextFunction) {
+function initRoute(req: Request, res: Response, next: NextFunction) {
     req.routeData = {
         accounts: {
             providedAccount: undefined,
@@ -46,6 +51,7 @@ function initRouteData(req: Request, res: Response, next: NextFunction) {
         products: {
             selectedProduct: undefined,
         },
+        cartData: new CartData(),
     };
 
     next();

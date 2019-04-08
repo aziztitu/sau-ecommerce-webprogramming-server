@@ -24,9 +24,17 @@ export enum ReservedUsername {
     Admin = 'admin',
 }
 
+export class CartItem extends Typegoose {
+    @prop({ ref: Product, required: true })
+    product!: Ref<Product>;
+
+    @prop({ default: 0 })
+    count!: number;
+}
+
 export class CartData extends Typegoose {
-    @arrayProp({ itemsRef: Product, default: () => [] })
-    products!: Ref<Product>[];
+    @arrayProp({ items: CartItem, default: [] })
+    cartItems!: CartItem[];
 }
 
 @pre('save', function(next) {
