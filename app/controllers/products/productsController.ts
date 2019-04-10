@@ -3,10 +3,13 @@ import authMiddlewares from '@/middlewares/authMiddlewares';
 import { ApiResponseData } from '../apiController';
 import { ProductModel, Product } from '@/models/Product';
 import { selectedProductController } from './selectedProduct/selectedProductController';
+import { Typegoose } from 'typegoose';
+import { Types } from 'mongoose';
 
 export const productsController = Router();
 
 productsController.get('/all', getAllProducts);
+productsController.post('/multiple', getProductsByIds);
 productsController.use('/select/:productId', selectedProductController);
 
 productsController.use(authMiddlewares.allowOnlyWithToken);
@@ -32,6 +35,22 @@ async function getAllProducts(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+async function getProductsByIds(req: Request, res: Response, next: NextFunction) {
+    let { productIds } = req.body;
+
+    let products = await ProductModel.find({
+        _id: {
+            $in: (productIds as string[]).map((productId) => Types.ObjectId(productId)),
+        },
+    }).exec();
+
+    res.json({
+        success: true,
+        message: 'Products successfully retrieved',
+        products,
+    } as ApiResponseData);
+}
+
 async function addNewProduct(req: Request, res: Response, next: NextFunction) {
     console.log(req.body);
 
@@ -45,11 +64,7 @@ async function addNewProduct(req: Request, res: Response, next: NextFunction) {
         imageFileBuffer = files[0].buffer;
     }
 
-    let resData = await ProductModel.addNewProduct(
-        productData as Product,
-        imageFileBuffer
-    );
+    let resData = await ProductModel.addNewProduct(productData as Product, imageFileBuffer);
 
     res.json(resData);
 }
-

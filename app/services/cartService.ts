@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { CartData, AccountModel } from '@/models/Account';
 import { helperUtils } from '@/tools/utils/helperUtils';
+import { devUtils } from '@/tools/utils/devUtils';
 
 export const cartService = {
     async getCartData(req: Request) {
@@ -26,30 +27,30 @@ export const cartService = {
                 await account.save();
             }
         } else if (req.session) {
-            if (req.session.cartData) {
-                req.session.cartData = newCartData;
+            req.session.cartData = newCartData;
 
-                let sessionSavePromise = async () => {
-                    return new Promise((resolve, reject) => {
-                        if (!req.session) {
-                            reject('Session is not defined');
+            let sessionSavePromise = async () => {
+                return new Promise((resolve, reject) => {
+                    if (!req.session) {
+                        reject('Session is not defined');
+                        return;
+                    }
+
+                    req.session.save((err) => {
+                        if (err) {
+                            helperUtils.error('Error saving cart data in session');
+                            reject('Error saving cart data in session');
                             return;
+                        } else {
+                            // devUtils.log("Cart Data updated in session:");
+                            // devUtils.log(req.session!.cartData);
+                            resolve();
                         }
-
-                        req.session.save((err) => {
-                            if (err) {
-                                helperUtils.error('Error saving cart data in session');
-                                reject('Error saving cart data in session');
-                                return;
-                            } else {
-                                resolve();
-                            }
-                        });
                     });
-                };
+                });
+            };
 
-                await sessionSavePromise();
-            }
+            await sessionSavePromise();
         }
     },
 };

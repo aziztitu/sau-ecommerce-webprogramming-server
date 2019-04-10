@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { ApiResponseData } from '@/controllers/apiController';
-import { AccountModel, Account } from '@/models/Account';
+import { AccountModel, Account, CartData } from '@/models/Account';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import serverConfig from '@/tools/serverConfig';
@@ -34,7 +34,6 @@ function login(req: Request, res: Response) {
     }
 
     AccountModel.findOne({ username: username })
-        .select('username password role')
         .exec((err, account) => {
             if (err) {
                 resData = {
@@ -53,7 +52,7 @@ function login(req: Request, res: Response) {
 
                     res.json(resData);
                 } else {
-                    bcrypt.compare(password, account.password, (err, same) => {
+                    bcrypt.compare(password, account.password, async (err, same) => {
                         if (err) {
                             resData = {
                                 success: false,
@@ -100,6 +99,36 @@ function login(req: Request, res: Response) {
                                     }
                                     resData.apiToken = apiToken;
                                 }
+                            }
+                        }
+
+                        // Transferring data from session to user
+                        if (resData.success && req.session) {
+                            let curCartData = req.session.cartData;
+
+                            if (curCartData) {
+                                let userCartData = account.cart;
+
+                                curCartData.cartItems.forEach((curCartItem) => {
+                                    let userCartItemIndex = userCartData.cartItems.findIndex(
+                                        (userCartItem) => {
+                                            return curCartItem.product == userCartItem.product;
+                                        }
+                                    );
+
+                                    if (userCartItemIndex >= 0) {
+                                        let userCartItem =
+                                            userCartData.cartItems[userCartItemIndex];
+                                        userCartItem.count += curCartItem.count;
+                                    } else {
+                                        userCartData.cartItems.push(curCartItem);
+                                    }
+                                });
+
+                                account.cart = userCartData;
+                                await account.save();
+
+                                req.session.cartData = new CartData();
                             }
                         }
 
