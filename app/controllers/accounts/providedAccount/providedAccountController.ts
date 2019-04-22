@@ -10,6 +10,7 @@ export const providedAccountController = Router({ mergeParams: true });
 providedAccountController.use(validateProvidedAccount);
 
 providedAccountController.get('/authData', getAuthData);
+providedAccountController.get('/orders', getOrders);
 providedAccountController.get('/info/basic', getBasicInfo);
 providedAccountController.put('/info', allowOnlySelfOrAdmin, updateAccountInfo);
 providedAccountController.put('/password', allowOnlySelfOrAdmin, updatePassword);
@@ -97,6 +98,16 @@ function getBasicInfo(req: Request, res: Response, next: NextFunction) {
             'name',
             'role',
         ]),
+    } as ApiResponseData;
+
+    res.json(apiResponseData);
+}
+
+async function getOrders(req: Request, res: Response, next: NextFunction) {
+    const apiResponseData = {
+        success: true,
+        message: 'Orders retrieved successfully',
+        orders: req.routeData.accounts.providedAccount!.orders,
     } as ApiResponseData;
 
     res.json(apiResponseData);

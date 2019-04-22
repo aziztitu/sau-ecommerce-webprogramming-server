@@ -13,6 +13,7 @@ import { MongooseDocument } from 'mongoose';
 import serverConfig from '@/tools/serverConfig';
 import { ReturnResult } from '@/tools/utils/helperUtils';
 import { Product } from './Product';
+import { Order } from './Order';
 
 export enum AccountRole {
     Admin = 'admin',
@@ -78,6 +79,9 @@ export class Account extends Typegoose {
 
     @prop({ default: () => new CartData() })
     cart!: CartData;
+
+    @arrayProp({ items: Order, default: [] })
+    orders!: Order[];
 
     @staticMethod
     static async addAdminIfMissing(this: ModelType<Account> & Account) {

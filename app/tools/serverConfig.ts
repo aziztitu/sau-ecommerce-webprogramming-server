@@ -58,6 +58,13 @@ const serverConfig = {
         },
     },
 
+    dashboard: {
+        checkout: {
+            taxRate: 0.08,
+            deliveryCharge: 3,
+        },
+    },
+
     recaptcha: {
         secretKey: process.env.RECAPTCHA_SECRET_KEY,
     },

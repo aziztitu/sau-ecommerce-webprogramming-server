@@ -39,6 +39,19 @@ apiController.use('/vendors', vendorsController);
 apiController.use('/products', productsController);
 apiController.use('/cart', cartController);
 
+apiController.get('/dashboardData', getDashboardData);
+
+function getDashboardData(req: Request, res: Response, next: NextFunction) {
+    res.json({
+        success: true,
+        message: 'Dashboard data collected successfully',
+        dashboardData: {
+            tax: serverConfig.dashboard.checkout.taxRate,
+            deliveryCharge: serverConfig.dashboard.checkout.deliveryCharge,
+        },
+    } as ApiResponseData);
+}
+
 /**
  * (Middleware)
  * Initializes the route data with the proper structure and dummy values
