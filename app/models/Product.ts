@@ -5,7 +5,7 @@ import { ReturnResult, helperUtils } from '@/tools/utils/helperUtils';
 import serverConfig from '@/tools/serverConfig';
 
 export class Product extends Typegoose {
-    @prop({ required: true })
+    @prop({ required: true, index: true })
     name!: string;
 
     @prop({ required: true })

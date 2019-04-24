@@ -17,6 +17,9 @@ export class Order extends Typegoose {
     @arrayProp({ items: OrderItem, default: [] })
     orderItems!: OrderItem[];
 
+    @prop({ default: () => Date.now() })
+    orderDate!: Date;
+
     @prop({ required: true })
     taxRate!: number;
     @prop({ default: 0 })

@@ -9,6 +9,7 @@ import { Types } from 'mongoose';
 export const productsController = Router();
 
 productsController.get('/all', getAllProducts);
+productsController.post('/search', searchProducts);
 productsController.post('/multiple', getProductsByIds);
 productsController.use('/select/:productId', selectedProductController);
 
@@ -67,4 +68,31 @@ async function addNewProduct(req: Request, res: Response, next: NextFunction) {
     let resData = await ProductModel.addNewProduct(productData as Product, imageFileBuffer);
 
     res.json(resData);
+}
+
+async function searchProducts(req: Request, res: Response, next: NextFunction) {
+    let { searchText } = req.body as { searchText: string };
+
+    let products = await ProductModel.find({
+        $or: [
+            {
+                name: {
+                    $regex: `.*${searchText}.*`,
+                    $options: 'i',
+                },
+            },
+            {
+                plu: {
+                    $regex: `.*${searchText}.*`,
+                    $options: 'i',
+                },
+            },
+        ],
+    }).exec();
+
+    res.json({
+        success: true,
+        message: '',
+        products,
+    } as ApiResponseData);
 }
